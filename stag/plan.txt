@@ -1,0 +1,13 @@
+Escape from the bike store
+
+USE CASE Description
+
+A player has to navigate a bike store to exit by solving puzzles
+
+Preconditions
+
+Goals
+
+Not available
+
+Steps of Execution

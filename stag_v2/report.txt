@@ -1,0 +1,14 @@
+I've had a go at making this as object oriented as I could.
+
+Perhaps as a result of my lack of current ability this means it doesn't fully work at the moment...
+
+I've split the program up into four classes:
+
+	Stag.java is where the game is run from.
+	Map.java sets up a hard-coded instance of a map with a number of place objects. Also a player object which I was trying to share between place objects. I think this might be one of things I've misunderstood. 
+	Place.java houses all of the methods and fields related to places. 
+	Player.java is where the code for player items lives.
+
+The game is supposed to allow you to navigate to various locations and pick up items which can be used to escape the bike-shop.
+
+As I say. At the moment this doesn't work fully and I'm fairly certain that it is not currently possible to win the game.
