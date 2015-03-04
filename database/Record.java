@@ -2,26 +2,33 @@ import java.util.ArrayList;
 
 class Record{
 
-	private int field_count = 0;
-	private ArrayList< String > fields_array = new ArrayList < String >();
+	private int fieldCount = 0;
+	private ArrayList<Field> fieldsArray = new ArrayList<Field>();
+
+	//Record constructor. Number of fields must be specified
+	public Record(int fieldCount){
+		this.fieldCount = fieldCount;
+		fieldsArray.ensureCapacity(fieldCount);
+	}
 
 	//adds new field to specific column in Record
-	public void addField(String new_field, int column){
+	public void addField(String fieldString, int column){
+		Field newField = new Field(fieldString);
 		try{
-			fields_array.add(column-1, new_field);
+			fieldsArray.add(column-1, newField);
 		}
 		catch(Exception e){
 			System.out.println("Tried to access invalid field location");
 			System.exit(1);
 		}
-		field_count++;
+		fieldCount++;
 	}
 
 	//removes field from specific column
 	public void removeField(int column){
-		fields_array.remove(column-1);
+		fieldsArray.remove(column-1);
 		try{
-			field_count--;
+			fieldCount--;
 		}
 		catch(Exception e){
 			System.out.println("Tried to remove invalid field");
@@ -29,13 +36,17 @@ class Record{
 		}
 	}
 
+	public ArrayList<Field> getFieldsArray(){
+		return fieldsArray;
+	}
+
 	//returns data from field at specific column
-	public String getField(int column){
-		return fields_array.get(column-1);
+	public Field getField(int column){
+		return fieldsArray.get(column-1);
 	}
 
 	//returns number of fields in Record
 	public int getFieldCount(){
-		return field_count;
+		return fieldCount;
 	}
 }

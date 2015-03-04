@@ -1,23 +1,36 @@
+import java.util.ArrayList;
+
 class DB{
 	public static void main(String[] args) {
 		DB program = new DB();
 		program.run();
 	}
+
 	public void run(){
-		Record test_record = new Record();
-		test_record.addField("Rob", 1);
-		String test_record_field = test_record.getField(1);
-		System.out.println(test_record_field);
 
-		test_record.addField("Rib", 1);
-		test_record_field = test_record.getField(1);
-		System.out.println(test_record_field);
+		Table testTable = new Table("Dogs", 3);
+		testTable.addColumn("Name", 1);
+		testTable.addColumn("Age", 2);
+		testTable.addColumn("Weight(pounds)", 3);
 
-		test_record.addField("TAM", 2);
-		test_record_field = test_record.getField(2);
-		System.out.println(test_record_field);
+		Record testRecord = new Record(5);
+		testRecord.addField("Gromit ", 1);
+		String testRecordField = testRecord.getField(1).getName();
+		System.out.println(testRecordField);
 
-		Table test_table = new Table("Dogs");
-		test_table.addColumn("Name", 1);
+		testRecord.addField("3 ", 2);
+		testRecordField = testRecord.getField(2).getName();
+		System.out.println(testRecordField);
+
+		testRecord.addField("45 ", 3);
+		testRecordField = testRecord.getField(3).getName();
+		System.out.println(testRecordField);
+
+		testTable.addRecord(testRecord);
+
+		testTable.printTable();
+
+		testTable.save();
+		
 	}
 }

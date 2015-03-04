@@ -1,11 +1,19 @@
 class Column{
 
 	private String name;
-	private int column_number;
+	private int columnNumber;
 	
 	//Column constructor
-	public Column (String column_name, int position){
-		name = column_name;
-		column_number = position;
+	public Column (String name, int columnNumber){
+		this.name = name;
+		this.columnNumber = columnNumber;
+	}
+
+	public String getName(){
+		return name;
+	}
+
+	public int getColummnNumber(){
+		return columnNumber;
 	}
 }
