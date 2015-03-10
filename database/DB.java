@@ -31,6 +31,11 @@ class DB{
 		testTable.printTable();
 
 		testTable.save();
-		
+
+		Database testDatabase = new Database();
+		testDatabase.addTable(testTable);
+
+		// testDatabase.saveTables();
+
 	}
 }
