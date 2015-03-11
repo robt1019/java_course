@@ -18,6 +18,10 @@ class Table{
         columnArray.ensureCapacity(column_count);
     }
 
+    public String getName(){
+        return name;
+    }
+
     //adds new column at specific column position
     public void addColumn(String columnName, int columnPosition){
         Column newColumn = new Column(columnName, columnPosition);
@@ -108,24 +112,25 @@ class Table{
         return true;
     }
 
-    //saves table to txt file in program folder. New line per record
-    public void save(){
+    //saves table to txt file in a specified directory folder. New line per record
+    public void save(String directoryName){
         try{
             BufferedWriter buffer = null;
-            File newTableFile = new File("tables/" + name + ".txt");
+            File newTableFile = new File(directoryName + "/" + name + ".txt");
 
             buffer = makeWriter(newTableFile);
 
             if(buffer != null){
+                buffer.write(name + " $\n");
                 for(Column column : columnArray){
                 buffer.write(column.getName() + " ");
                 }
-                buffer.write("\n");
+                buffer.write("$\n");
                 for(Record record : recordArray){
                     for(Field field : record.getFieldsArray()){
                         buffer.write(field.getName());
                     }
-                    buffer.write("$");
+                    buffer.write("$\n");
                 }
                 buffer.close();
             }
