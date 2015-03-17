@@ -32,12 +32,11 @@ class Database{
 
 			while(file.hasNext() && !nextWord.equals("$")){
 				nextWord = file.next();
-				fileTable.addColumn(nextWord, columnIndex);
+				fileTable.addColumnFromFile(nextWord, columnIndex);
 				columnIndex++;
 			}
 			
 			int rowCount = getRowCount(tableFile);
-			System.out.println("rowcount: " + rowCount);
 			
 			for(int i=0; i<rowCount; i++){
 				nextWord = "";
@@ -48,7 +47,6 @@ class Database{
 					fileRecord.addField(nextWord, columnIndex);
 					columnIndex++;
 				}
-				System.out.println("current word: " + nextWord);
 				fileTable.addRecord(fileRecord);
 			}
 			tableArray.add(fileTable);
@@ -123,6 +121,7 @@ class Database{
 				return tableToFind;
 			}
 		}
+		System.out.println("Couldn't find table " + tableName + ". Are you sure it exists?");
 		return tableToFind;
 	}
 
@@ -146,7 +145,6 @@ class Database{
 		try (DirectoryStream<Path> stream = Files.newDirectoryStream(dir)){
 			for (Path file: stream){
 				addTableFromFile(file);
-				System.out.println(file);
 			}
 		}
 		catch(Exception e){

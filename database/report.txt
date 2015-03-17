@@ -1,0 +1,152 @@
+DB Assignment
+
+To see how some of the key classes and methods work you can compile and run DB.java.
+
+In this document I've dealt with classes in the order I made them. In later classes, I had to change some of the earlier classes to make them fit with new design decisions. Any changes to previous classes are detailed in the new class description.
+
+Records
+
+	I started by creating a Record class which contained the following private fields:
+		
+		-An array of 'Field' objects (see below for Field class) stored in an ArrayList.
+		-An integer to store the number of fields for each record.
+
+	And the following public methods:
+
+		-A constructor that takes the number of fields as an argument (this is to allow me to use the 'ensureCapicity' ArrayList method to guarantee sufficient space and make adding colunms less error prone).
+
+		-'addField' adds a field to a specific column, creating a new Field object first, and updates the fieldCount field in the Record object.
+
+		-'removeField' does the opposite.
+
+		-'getFieldsArray' returns the array of Field objects associated with the record, allowing safe manipulation of the contents from other classes.
+
+		-'getField' returns the Field object at a specific index in the record.
+
+		-'getFieldCount' returns the number of fields.
+
+	These public methods, combined with the private fields, are to ensure that data within Record objects doesn't get changed by accident.
+
+Fields
+
+	I decided to make a 'Field' class to allow more flexible use of Records later on in development. At this stage, Field just has a private String 'name' to store its data. However, I wanted to code it as a separate class to allow for data types etc. later in the program.
+
+Tables
+
+	This was one of the bigger classes in the program. It started with the following private fields:
+
+		-ArrayList of 'Column' objects for column headings (see below for 'Column' class).
+		
+		-ArrayList of Record objects for individual records associated with the table.
+
+		-'name' String. Each table had a name.
+
+		-'recordCount' int to keep count of the number of records.
+
+	And the following public methods:
+
+		-A constructor that assigns a table a name, as well as a number of columns (again to use the 'ensureCapacity' ArrayList method)
+
+		-'getName' returns the table name String.
+
+		-'addColumn' takes the String for the column name as well as the column position. and creates a new Column object to add to the columnArray. If a column already exists then the user can't add a column and must use a different method.
+
+		-'removeColumn' does the opposite. Both methods catch Exceptions and tell the user that they're doing something wrong.
+
+		-'editColumn' is used to edit existing columns. Again Exceptions are caught and assumed to be due to the user trying to edit non-existent columns.
+
+		-'printTable' prints the table to the console. String formatting is used to line up columns neatly.
+
+		-'addRecord' adds a specific Record object to the recordArray.
+
+		-'getRecordCount' returns the number of records currently stored in the Table.
+
+		-'editRecord' takes a Record object, columnPosition(int) and newData(String) argument and allows changing a specific field of a specific record. Implementing this method meant adding an 'editName' method to the Field class.
+
+		-'getRecord' returns a record from a specific row at this stage. This will be changed later.
+
+Columns
+	
+	Columns store their name as a String, and columnNumber as an integer.
+
+	They have the following public methods:
+
+		-Constructor to set the name and column number
+
+		-'getName()' returns the name string
+
+		-'getColumnNumber()' returns the column index
+
+		-later the 'renameColumn(String newName)' method was added to ammend existing columns.
+
+Files
+
+	Incorporating files meant changing some bits in existing classes. But not too much. Most of the work for files is done in the Database class and will be described there.
+
+	Saving Tables:
+
+		-This is done in the Table class, using a FileWriter object as well as a BufferedWriter object. Files are saved to a specific directory name and checks are incorporated to detect existing files and ask the user if they want to overwrite them. The '$' symbol is inserted at the end of records/headings in the file to make reading possible later.
+
+	Loading:
+
+		-This is done slightly differently, and will be detailed in the Database class description.
+
+
+Printing
+
+	-Printing is done within the Table class as detailed above. The columns line up neatly by using basic string formatting.
+
+Keys
+
+	I incorporated a simple key system by using first entry in a record as the key. This string is compared against a static recordKeysArray ArrayList to make sure it hasn't been used before. If it has, then the user cannot use that entry as a key.
+
+	This meant adding the recordsKeyArray to the Record class, as well as the following method:
+
+		-'keyExists' returns a boolean true or false, depending on whether the key has already been used or not.
+
+		-All methods relating to editing specific Fields within a Record now prevent the user from editing the first column, to protect the key.
+
+		-However, it is possible at present to add a new first Column value, effectively changing the primary key. This is something that is not ideal and with more time I would have like to change this.
+
+	In the Table class, this change meant protecting the first column field in any record by preventing users from editing the first column in a table.
+
+
+
+Database
+
+	The Database class is where collections of tables are stored and accessed. This is also where databases are loaded from file.
+
+	The Database class has the following private fields:
+
+		-An ArrayList of Table objects called 'tableArray'
+
+		-A String value called 'directoryName' which specifies the directory the database lives in. This value can be changed by changed by loading a database or creating a new directory for the database.
+
+
+	And the following methods:
+
+		-public 'getName' returns the tableName string;
+
+		-public 'addTable' allows adding a specific Table object.
+
+		-public 'addTableFromFile' uses a Scanner to read a table file from a specified Path interface, and create a Table object based on the contents of that file. The '$' is used to detect the end of records etc. This is not ideal as it means that the dollar sign can't be used in any tables, and I would look to change this later.
+
+		-private 'getColumnCount' is used to get the number of columns in a specific Path file. This column count is used to aid the processing of the file.
+
+		-private 'getRowCount' gets the number of table rows in the same manner as getColumnCount and this is again to aid in processing of the file.
+
+		-public 'removeTable' removes a specific Table object from the tableArray if it exists.
+
+		-public 'getTable' returns a specific table by searching for it's string name. If it doesn't exist, null is returned.
+
+		-public 'createDirectory' makes a directory with a string used to specify its name, in the current folder. This is used when creating new databases, rather than loading existing ones, and edits the 'directoryName' string to tie the database to the new directory.
+
+		-public 'loadDatabase' loads a database from a specific directory, if it exists. This uses the DirectoryPath Path operation to iterate through all files in the specified directory. This allows all the 'table files' in the 'database' directory to be converted into Table objects and stored in the current Database object.
+
+		-public 'saveDatabase' iterates through all tables in the database directory and saves them to file, using Table's save method.
+
+	It is not currently possible to edit database directory names or to overwrite them, but this is something I would have looked to incoroporate with more time.
+
+Testing
+	
+	Testing was fairly basic. It took the form of populating a series of dummy tables by creating new instances of the various component Classes of the database, editing them using all relevant methods, and printing the result to the terminal. Any unexpected results could then be detected and ammended. This was done in DB.java and is commented out now.

@@ -1,4 +1,4 @@
 Dogs $
-Name Age Weight(pounds) $
-Gromit 3 45 $
-Nobber 5 150 $
+Name Age Weight(pounds)  $
+Gromit 3 45  $
+Nibbler  5 150  $

@@ -24,13 +24,58 @@ class Table{
 
     //adds new column at specific column position
     public void addColumn(String columnName, int columnPosition){
+        if(columnName.contains("$")){
+            System.out.println("Error.Your column name contains a $ sign, this is a reserved character.");
+            System.exit(1);
+        }
         Column newColumn = new Column(columnName, columnPosition);
         try{
             columnArray.add(columnPosition-1, newColumn);           
         }
         catch(Exception e){
             System.out.println("Tried to add table column at invalid location");
-            System.exit(1);
+            return;
+        }            
+    }
+
+    //adds new column at specific column position
+    public void addColumnFromFile(String columnName, int columnPosition){
+        Column newColumn = new Column(columnName, columnPosition);
+        try{
+            columnArray.add(columnPosition-1, newColumn);           
+        }
+        catch(Exception e){
+            System.out.println("Tried to add table column at invalid location");
+            return;
+        }            
+    }
+
+    public void removeColumn(int columnPosition){
+        if(columnPosition == 1){
+            System.out.println("Can't change first column, this is the primary key");
+        }
+        try{
+            columnArray.remove(columnPosition-1);            
+        }
+        catch(Exception e){
+            System.out.println("Tried to remove invalid column");
+        }
+    }
+
+    public void editColumn(String newColumnName, int columnPosition){
+
+        if(columnPosition-1 == 1){
+            System.out.println("Can't change first column. This is the primary key");
+            return;
+        }
+        else{
+            try{
+            columnArray.get(columnPosition-1).renameColumn(newColumnName);
+            }
+            catch(Exception e){
+                System.out.println("Couldn't edit column " + columnPosition +". Are you sure it exists?");
+            }
+
         }
     }
 
@@ -44,12 +89,39 @@ class Table{
             for(Field field : record.getFieldsArray()){
                 System.out.printf("%-20s", field.getName());
             }
+            System.out.println();
         }
-        System.out.println();
+    }
+
+    //adds new record
+    public void addRecord(Record recordToAdd){
+        recordArray.add(recordToAdd);
+        recordCount++;
+    }
+
+    //adds new record
+    public void removeRecord(Record recordToRemove){
+        if(recordArray.remove(recordToRemove) == true){
+            recordCount--;            
+        }
+        else{
+            System.out.println("Couldn't find record to remove. Are you sure it exists?");
+        }
     }
 
     public int getRecordCount(){
         return recordCount;
+    }
+
+    //edits a specific field of a specific record
+    public void editRecord(Record record, int columnPosition, String newData){
+        try{
+            Record recordToChange = recordArray.get(recordArray.indexOf(record));
+            recordToChange.editField(columnPosition-1, newData);
+        }
+        catch (Exception e){
+            System.out.println("Couldn't edit record at +" + columnPosition + ". Are you sure it exists?");
+        }
     }
 
     //return record at specific row in database
@@ -60,14 +132,9 @@ class Table{
         }
         catch(Exception e){
             System.out.println("Tried to access invalid record");
-            System.exit(1);
+            return null;
         }
         return returnRecord;
-    }
-
-    //adds new record
-    public void addRecord(Record recordToAdd){
-        recordArray.add(recordToAdd);
     }
 
     //creates buffered writer for specific file and returns it. Checks
@@ -87,7 +154,7 @@ class Table{
         }
         catch(IOException e){
             System.out.println("A write error has occured");
-            System.exit(1);
+            return null;
         }
         return buffer;
     }
@@ -125,12 +192,12 @@ class Table{
                 for(Column column : columnArray){
                 buffer.write(column.getName() + " ");
                 }
-                buffer.write("$\n");
+                buffer.write(" $\n");
                 for(Record record : recordArray){
                     for(Field field : record.getFieldsArray()){
                         buffer.write(field.getName());
                     }
-                    buffer.write("$\n");
+                    buffer.write(" $\n");
                 }
                 buffer.close();
             }
@@ -138,10 +205,7 @@ class Table{
         }
         catch(IOException e){
             System.out.println("A write error has occured");
-            System.exit(1);
+            return;
         }
-    }
-    public void open(File tableFile){
-
     }
 }

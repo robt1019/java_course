@@ -9,18 +9,9 @@ class Record{
 
 	//Record constructor. Number of fields must be specified, as well as first field
 	//First field acts as key. Uniqueness is checked;
-	public Record(int fieldCount, String keyField){
-		if(keyExists(keyField, recordKeysArray)){
-			System.out.println("Key exists. Try another name for Record " + keyField);
-			System.exit(1);
-		}
-		else{
-		this.name = keyField;
-		recordKeysArray.add(keyField);
-		addField(keyField, 1);
+	public Record(int fieldCount){
 		this.fieldCount = fieldCount;
 		fieldsArray.ensureCapacity(fieldCount);
-		}
 	}
 
 	private boolean keyExists(String nameToCheck, ArrayList<String> recordNamesArray){
@@ -34,26 +25,50 @@ class Record{
 
 	//adds new field to specific column in Record
 	public void addField(String fieldString, int column){
+		if(column == 1){
+			if(keyExists(fieldString, recordKeysArray)){
+				System.out.println("key " + fieldString + " is already being used in this table. Please use another one");
+				System.exit(1);
+			}
+			else{
+				recordKeysArray.add(fieldString);
+			}
+		}
 		Field newField = new Field(fieldString);
 		try{
 			fieldsArray.add(column-1, newField);
 		}
 		catch(Exception e){
 			System.out.println("Tried to access invalid field location");
-			System.exit(1);
+			return;
 		}
 		fieldCount++;
 	}
 
 	//removes field from specific column
 	public void removeField(int column){
-		fieldsArray.remove(column-1);
 		try{
+			fieldsArray.remove(column-1);
 			fieldCount--;
 		}
 		catch(Exception e){
 			System.out.println("Tried to remove invalid field");
-			System.exit(1);
+			return;
+		}
+	}
+
+	//changese field at specific column index
+	public void editField(int column, String newData){
+        if(column-1 == 1){
+            System.out.println("Can't change first column. This is the primary key");
+            return;
+        }
+		try{
+			Field currentField = fieldsArray.get(column-1);
+			currentField.editName(newData);
+		}
+		catch(Exception e){
+			System.out.println("Couldn't edit Field at column " + column + ". Are you sure it exists?");
 		}
 	}
 

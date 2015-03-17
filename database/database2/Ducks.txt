@@ -1,0 +1,5 @@
+Ducks $
+Name Age favouriteColour Father Birthday  $
+Geoffrey 34 red Randalph 15/08/80  $
+Donald 3 blue Randalph 15/08/12  $
+Daffy 34 orange Gandalf 15/08/80  $

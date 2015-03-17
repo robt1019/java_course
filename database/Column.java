@@ -13,6 +13,10 @@ class Column{
 		return name;
 	}
 
+	public void renameColumn(String newName){
+		name = newName;
+	}
+
 	public int getColummnNumber(){
 		return columnNumber;
 	}
